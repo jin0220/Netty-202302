@@ -1,2 +1,4 @@
-package com.example.netty.handler;public class Handler {
+package com.example.netty.handler;
+
+public class Handler {
 }
