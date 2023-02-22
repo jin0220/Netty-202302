@@ -1,6 +1,7 @@
 package com.example.netty.socket;
 
 import com.example.netty.decoder.Decoder;
+import com.example.netty.handler.Handler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
+
+    private final Handler handler;
 
     /**
      * 클라이언트 소켓 채널이 생성될 때 사용
@@ -28,6 +31,7 @@ public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
 
         // 뒤이어 처리할 디코더 및 핸들러 추가
         channelPipeline.addLast(decoder);
+        channelPipeline.addLast(handler);
 
     }
 }
