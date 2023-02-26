@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.InetSocketAddress;
+
 /**
  * 네티 설정 클래스
  */
@@ -25,6 +27,10 @@ public class NettyConfig {
     private int workerCount;
     @Value("${server.netty.backlog}")
     private int backlog;
+    @Value("${server.host}")
+    private String host;
+    @Value("${server.port}")
+    private int port;
 
     /**
      * 서버 설정을 도와주는 클래스
@@ -62,5 +68,15 @@ public class NettyConfig {
     @Bean(destroyMethod = "shutdownGracefully")
     public NioEventLoopGroup workerGroup() {
         return new NioEventLoopGroup(workerCount);
+    }
+
+    /**
+     * IP 소켓 주소(IP 주소, Port 번호)를 구현
+     * 도메인 이름으로 객체 생성 가능
+     * @return
+     */
+    @Bean
+    public InetSocketAddress inetSocketAddress() {
+        return new InetSocketAddress(host,port);
     }
 }
