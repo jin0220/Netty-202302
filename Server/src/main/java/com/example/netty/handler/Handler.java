@@ -3,6 +3,8 @@ package com.example.netty.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 public class Handler extends ChannelInboundHandlerAdapter {
     private int DATA_LENGTH = 2048;
     private ByteBuf buff;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     /**
      * 핸들러가 생성될 때 호출
@@ -39,6 +43,7 @@ public class Handler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         String remoteAddress = ctx.channel().remoteAddress().toString();
+        log.info("Remote Address: " + remoteAddress);
     }
 
     /**
