@@ -19,7 +19,6 @@ public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline channelPipeline = ch.pipeline();
 
-
         channelPipeline.addLast(new Handler());
     }
 }

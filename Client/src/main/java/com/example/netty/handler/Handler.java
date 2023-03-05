@@ -2,12 +2,16 @@ package com.example.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 import io.netty.util.CharsetUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+import java.nio.charset.Charset;
+
+@Component
+@ChannelHandler.Sharable // 여러 채널에서 핸들러를 공유할 수 있음
+@RequiredArgsConstructor
 public class Handler extends ChannelInboundHandlerAdapter {
     private ByteBuf buff;
 
@@ -18,7 +22,18 @@ public class Handler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(Unpooled.copiedBuffer("Netty Connect()", CharsetUtil.UTF_8)); // 채널 활성화 시 메시지 전송
+        String sendMessage = "Hello, Netty !";
+
+        ByteBuf messageBuffer = Unpooled.buffer();
+        messageBuffer.writeBytes(sendMessage.getBytes());
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("전송한 문자열 [");
+        builder.append(sendMessage);
+        builder.append("]");
+
+        System.out.println(builder.toString());
+        ctx.writeAndFlush(messageBuffer);
     }
 
     /**
@@ -28,14 +43,19 @@ public class Handler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ByteBuf mBuf = (ByteBuf) msg;
-        buff.writeBytes(mBuf); // 클라이언트에서 보내는 데이터가 축척됨
-        mBuf.release();
+        String readMessage = ((ByteBuf)msg).toString(Charset.defaultCharset());
 
-        final ChannelFuture f = ctx.writeAndFlush(buff);
-        f.addListener(ChannelFutureListener.CLOSE);
+        StringBuilder builder = new StringBuilder();
+        builder.append("수신한 문자열 [");
+        builder.append(readMessage);
+        builder.append("]");
 
-//        System.out.println("Client receive : " + msg.toString(CharsetUtil.UTF_8));  // 수신한 메시지 로깅
+        System.out.println(builder.toString());
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        ctx.close();
     }
 
     /**

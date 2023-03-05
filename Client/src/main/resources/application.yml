@@ -1,0 +1,5 @@
+server:
+  netty:
+    backlog: 1
+  host: localhost
+  port: 9000
