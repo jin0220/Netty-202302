@@ -1,0 +1,7 @@
+server:
+  netty:
+    boss-count: 1
+    worker-count: 1
+    backlog: 2
+  host: localhost
+  port: 9000

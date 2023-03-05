@@ -57,6 +57,8 @@ public class Handler extends ChannelInboundHandlerAdapter {
         buff.writeBytes(mBuf); // 클라이언트에서 보내는 데이터가 축척됨
         mBuf.release();
 
+        System.out.println("수신한 문자열 [" + mBuf + "]");
+
         final ChannelFuture f = ctx.writeAndFlush(buff);
         f.addListener(ChannelFutureListener.CLOSE);
     }
